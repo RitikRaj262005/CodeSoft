@@ -1,48 +1,59 @@
-def add(x, y):
-    return x + y
+from tkinter import *
 
-def subtract(x, y):
-    return x - y
+# Create the main window
+window = Tk()
+window.title("Arithmetic Calculator")
+window.geometry('300x200')
 
-def multiply(x, y):
-    return x * y
+# Function to perform calculation
+def calculate():
+    try:
+        num1 = float(entry1.get())
+        num2 = float(entry2.get())
+    except ValueError:
+        result_label.config(text="Please enter valid numbers.")
+        return
 
-def divide(x, y):
-    if y == 0:
-        return "Error: Division by zero"
-    return x / y
+    operation = operation_var.get()
+    if operation == "+":
+        result = num1 + num2
+    elif operation == "-":
+        result = num1 - num2
+    elif operation == "*":
+        result = num1 * num2
+    elif operation == "/":
+        if num2 == 0:
+            result_label.config(text="Cannot divide by zero.")
+            return
+        result = num1 / num2
+    else:
+        result_label.config(text="Select an operation.")
+        return
 
-print("Simple Calculator")
-print("----------------")
-print("Operations:")
-print("1. Add")
-print("2. Subtract")
-print("3. Multiply")
-print("4. Divide")
+    result_label.config(text=f"Result: {result}")
 
-while True:
-    # Get operation choice
-    choice = input("Enter operation number (1-4), or 'q' to quit: ")
-    
-    if choice == 'q':
-        print("Thank you for using the calculator. Goodbye!")
-        break
-    
-    if choice not in ('1', '2', '3', '4'):
-        print("Invalid input. Please try again.")
-        continue
-    
-    # Get number inputs
-    num1 = float(input("Enter first number: "))
-    num2 = float(input("Enter second number: "))
-    
-    if choice == '1':
-        print(f"Result: {add(num1, num2)}")
-    elif choice == '2':
-        print(f"Result: {subtract(num1, num2)}")
-    elif choice == '3':
-        print(f"Result: {multiply(num1, num2)}")
-    elif choice == '4':
-        print(f"Result: {divide(num1, num2)}")
-    
-    print()  # Print a blank line for readability
+# Input fields
+Label(window, text="Number 1:").grid(row=0, column=0, padx=10, pady=5)
+entry1 = Entry(window)
+entry1.grid(row=0, column=1, padx=10, pady=5)
+
+Label(window, text="Number 2:").grid(row=1, column=0, padx=10, pady=5)
+entry2 = Entry(window)
+entry2.grid(row=1, column=1, padx=10, pady=5)
+
+# Radio buttons for operations
+Label(window, text="Operation:").grid(row=2, column=0, padx=10, pady=5)
+operation_var = StringVar(value="+")
+frame = Frame(window)
+frame.grid(row=2, column=1)
+
+for symbol in ["+", "-", "*", "/"]:
+    Radiobutton(frame, text=symbol, variable=operation_var, value=symbol).pack(side=LEFT)
+
+# Calculate button and result label
+Button(window, text="Calculate", command=calculate).grid(row=3, column=0, columnspan=2, pady=10)
+result_label = Label(window, text="Result:")
+result_label.grid(row=4, column=0, columnspan=2, pady=5)
+
+# Start the GUI loop
+window.mainloop()
